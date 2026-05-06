@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Pong 3D — Three.js</title>
+    <meta name="description" content="Un gioco Pong 3D con estetica neon costruito con Three.js">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Overlay Menu -->
+    <div id="overlay">
+        <div id="menu">
+            <h1 class="game-title">NEON<span class="accent">PONG</span></h1>
+            <p class="subtitle">3D Edition</p>
+            <div class="menu-buttons">
+                <button id="btn-start" class="btn-neon">GIOCA</button>
+                <button id="btn-difficulty" class="btn-neon btn-secondary">DIFFICOLTÀ: <span id="diff-label">NORMALE</span></button>
+            </div>
+            <p class="controls-hint">Usa il <strong>mouse</strong> o <strong>↑ ↓</strong> per muovere · <strong>click</strong> o <strong>spazio</strong> per sparare</p>
+        </div>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div id="score-left" class="score">0</div>
+        <div id="score-divider">:</div>
+        <div id="score-right" class="score">0</div>
+    </div>
+    <div id="message"></div>
+    <div id="powerup-hud" class="hidden">
+        <span id="powerup-icon">⚡</span>
+        <span id="powerup-name"></span>
+        <div id="powerup-bar"><div id="powerup-bar-fill"></div></div>
+    </div>
+    <button id="btn-pause" class="btn-hud" title="Pausa">❚❚</button>
+
+    <!-- Pause Overlay -->
+    <div id="pause-overlay" class="hidden">
+        <div class="pause-content">
+            <h2>PAUSA</h2>
+            <button id="btn-resume" class="btn-neon">RIPRENDI</button>
+            <button id="btn-quit" class="btn-neon btn-secondary">ESCI</button>
+        </div>
+    </div>
+
+    <!-- Win Overlay -->
+    <div id="win-overlay" class="hidden">
+        <div class="pause-content">
+            <h2 id="win-text">HAI VINTO!</h2>
+            <p id="win-score"></p>
+            <button id="btn-replay" class="btn-neon">RIGIOCA</button>
+            <button id="btn-menu" class="btn-neon btn-secondary">MENU</button>
+        </div>
+    </div>
+
+    <canvas id="game-canvas"></canvas>
+
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+    <script type="module" src="game.js"></script>
+</body>
+</html>

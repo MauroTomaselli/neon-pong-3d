@@ -1,0 +1,348 @@
+/* ── Reset & Base ─────────────────────────────────── */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    background: #050510;
+    font-family: 'Rajdhani', sans-serif;
+    color: #fff;
+    cursor: none;
+}
+
+canvas#game-canvas {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+}
+
+/* ── Overlay Menu ────────────────────────────────── */
+#overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, rgba(10, 5, 30, 0.85) 0%, rgba(5, 5, 16, 0.95) 100%);
+    backdrop-filter: blur(12px);
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+#overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+#menu {
+    text-align: center;
+    animation: fadeSlideUp 0.8s ease-out;
+}
+
+.game-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(3rem, 8vw, 6rem);
+    font-weight: 900;
+    letter-spacing: 0.15em;
+    color: #fff;
+    text-shadow:
+        0 0 20px rgba(0, 200, 255, 0.6),
+        0 0 60px rgba(0, 200, 255, 0.3),
+        0 0 120px rgba(0, 100, 255, 0.15);
+}
+
+.game-title .accent {
+    color: #00e5ff;
+    text-shadow:
+        0 0 20px rgba(0, 229, 255, 0.8),
+        0 0 60px rgba(0, 229, 255, 0.5),
+        0 0 120px rgba(0, 229, 255, 0.2);
+}
+
+.subtitle {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 0.5em;
+    color: rgba(0, 229, 255, 0.5);
+    margin-top: -0.5rem;
+    margin-bottom: 3rem;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+
+.btn-neon {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    padding: 0.9em 2.8em;
+    border: 2px solid #00e5ff;
+    border-radius: 6px;
+    background: rgba(0, 229, 255, 0.08);
+    color: #00e5ff;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    min-width: 280px;
+}
+
+.btn-neon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0, 229, 255, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+
+.btn-neon:hover {
+    background: rgba(0, 229, 255, 0.18);
+    box-shadow:
+        0 0 20px rgba(0, 229, 255, 0.3),
+        0 0 60px rgba(0, 229, 255, 0.1),
+        inset 0 0 20px rgba(0, 229, 255, 0.05);
+    transform: translateY(-2px);
+}
+
+.btn-neon:hover::before {
+    opacity: 1;
+}
+
+.btn-neon:active {
+    transform: translateY(0);
+}
+
+.btn-neon.btn-secondary {
+    border-color: rgba(0, 229, 255, 0.35);
+    color: rgba(0, 229, 255, 0.7);
+    font-size: 0.85rem;
+    padding: 0.7em 2em;
+}
+
+.btn-neon.btn-secondary:hover {
+    border-color: #00e5ff;
+    color: #00e5ff;
+}
+
+.controls-hint {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.3);
+    letter-spacing: 0.05em;
+}
+
+.controls-hint strong {
+    color: rgba(0, 229, 255, 0.5);
+}
+
+/* ── HUD ────────────────────────────────────────── */
+#hud {
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    font-family: 'Orbitron', sans-serif;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+#hud.visible {
+    opacity: 1;
+}
+
+.score {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    min-width: 2ch;
+    text-align: center;
+    text-shadow: 0 0 20px rgba(0, 229, 255, 0.6);
+}
+
+#score-left {
+    color: #00e5ff;
+}
+
+#score-right {
+    color: #ff3d71;
+}
+
+#score-divider {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    color: rgba(255, 255, 255, 0.15);
+    font-weight: 300;
+}
+
+#message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 60;
+    font-family: 'Orbitron', sans-serif;
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #00e5ff;
+    text-shadow: 0 0 30px rgba(0, 229, 255, 0.6);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+#message.visible {
+    opacity: 1;
+}
+
+#btn-pause {
+    position: fixed;
+    top: 1.5rem;
+    right: 1.5rem;
+    z-index: 55;
+    background: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 1rem;
+    padding: 0.4em 0.6em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#btn-pause.visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+#btn-pause:hover {
+    border-color: #00e5ff;
+    color: #00e5ff;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.2);
+}
+
+/* ── Pause & Win Overlays ──────────────────────── */
+#pause-overlay,
+#win-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(5, 5, 16, 0.8);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+#pause-overlay.hidden,
+#win-overlay.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.pause-content {
+    text-align: center;
+    animation: fadeSlideUp 0.4s ease-out;
+}
+
+.pause-content h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    color: #00e5ff;
+    text-shadow: 0 0 30px rgba(0, 229, 255, 0.5);
+    margin-bottom: 2rem;
+}
+
+.pause-content p {
+    font-size: 1.2rem;
+    color: rgba(255, 255, 255, 0.5);
+    margin-bottom: 2rem;
+}
+
+.pause-content .btn-neon {
+    display: block;
+    margin: 0.8rem auto;
+}
+
+/* ── Power-up HUD ────────────────────────────── */
+#powerup-hud {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 55;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(0, 229, 255, 0.08);
+    border: 1px solid rgba(0, 229, 255, 0.3);
+    border-radius: 8px;
+    padding: 0.5rem 1.2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    color: #00e5ff;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+}
+
+#powerup-hud.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+
+#powerup-icon { font-size: 1.2rem; }
+
+#powerup-bar {
+    width: 80px;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+#powerup-bar-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, #00e5ff, #7c4dff);
+    border-radius: 3px;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 8px rgba(0, 229, 255, 0.5);
+}
+
+/* ── Animations ─────────────────────────────────── */
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ── Custom cursor replacement ───────────────── */
+body.playing {
+    cursor: none;
+}
+
+body:not(.playing) {
+    cursor: default;
+}
