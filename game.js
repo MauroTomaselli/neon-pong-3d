@@ -496,8 +496,13 @@ function animate(time) {
 
 // ── Events ──
 window.addEventListener('mousemove', e => { mouseY = e.clientY; });
-window.addEventListener('touchmove', e => { if (e.touches.length > 0) mouseY = e.touches[0].clientY; }, {passive: true});
-window.addEventListener('touchstart', e => { if (e.touches.length > 0) mouseY = e.touches[0].clientY; }, {passive: true});
+window.addEventListener('touchmove', e => { 
+    if (e.touches.length > 0) mouseY = e.touches[0].clientY; 
+    if (state === 'playing') e.preventDefault(); 
+}, {passive: false});
+window.addEventListener('touchstart', e => { 
+    if (e.touches.length > 0) mouseY = e.touches[0].clientY; 
+}, {passive: false});
 window.addEventListener('click', () => { if (state === 'playing') fireBullet(); });
 window.addEventListener('keydown', e => {
     if (e.key === 'ArrowUp') keys.up = true;
