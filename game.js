@@ -4,8 +4,8 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 
 // ── Constants ──
-const FIELD_W = 24, FIELD_H = 14, WALL_H = 0.6;
-const PADDLE_W = 0.6, PADDLE_H = 3.6, PADDLE_D = 1.4;
+const FIELD_W = 30, FIELD_H = 18, WALL_H = 0.6;
+const PADDLE_W = 0.8, PADDLE_H = 4.8, PADDLE_D = 1.8;
 const BALL_R = 0.25, WIN_SCORE = 7;
 const DIFF = { FACILE: 0.04, NORMALE: 0.07, DIFFICILE: 0.12 };
 const PU_TYPES = [
@@ -45,7 +45,7 @@ scene.background = new THREE.Color(0x050510);
 scene.fog = new THREE.FogExp2(0x050510, 0.025);
 
 const camera = new THREE.PerspectiveCamera(55, innerWidth / innerHeight, 0.1, 100);
-camera.position.set(0, 14, 14);
+camera.position.set(0, 18, 18);
 camera.lookAt(0, 0, 0);
 
 // Post-processing
@@ -401,15 +401,15 @@ function updateGame() {
     const halfH = FIELD_H / 2 - BALL_R - 0.12;
     const paddleHalf = PADDLE_D / 2;
     const halfField = FIELD_H / 2 - paddleHalf - 0.15;
-    const pSpeed = (activePU && activePU.id === 'speed') ? 0.28 : 0.18;
+    const pSpeed = (activePU && activePU.id === 'speed') ? 0.35 : 0.23;
 
-    // Player paddle (keyboard + mouse)
+    // Player paddle (keyboard + mouse/touch)
     if (keys.up) paddleL.position.z -= pSpeed;
     if (keys.down) paddleL.position.z += pSpeed;
 
-    // Mouse control
+    // Mouse/Touch control
     const tZ = ((mouseY / innerHeight) - 0.5) * FIELD_H * 0.95;
-    paddleL.position.z += (tZ - paddleL.position.z) * 0.12;
+    paddleL.position.z += (tZ - paddleL.position.z) * 0.15;
     paddleL.position.z = THREE.MathUtils.clamp(paddleL.position.z, -halfField, halfField);
 
     // AI paddle
@@ -496,6 +496,8 @@ function animate(time) {
 
 // ── Events ──
 window.addEventListener('mousemove', e => { mouseY = e.clientY; });
+window.addEventListener('touchmove', e => { if (e.touches.length > 0) mouseY = e.touches[0].clientY; }, {passive: true});
+window.addEventListener('touchstart', e => { if (e.touches.length > 0) mouseY = e.touches[0].clientY; }, {passive: true});
 window.addEventListener('click', () => { if (state === 'playing') fireBullet(); });
 window.addEventListener('keydown', e => {
     if (e.key === 'ArrowUp') keys.up = true;
